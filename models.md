@@ -8,14 +8,14 @@ Catalogue of every model designed in the thesis, including those that did not pa
 
 | Id | Model | Outcome | Source | Prediction point | Reached | Result | Repository |
 |---|---|---|---|---|---|---|---|
-| M1 | Maternal death | Death in the delivery hospitalization | MIMIC-IV v3.1 | Admission + 24 h | G3 | **Fails G3** (3 events): feasibility; return R1 to M2 | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/khem777/MaternalMortality_MIMIC-IV_Cureus) |
-| M2 | Severe maternal morbidity (SMM) | 20 CDC indicators | MIMIC-IV v3.1 | Admission + 24 h | S11 | **Early identifier**; return R2 (escalation): **exploratory signal of prediction** | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/khem777/MaternalMortality_MIMIC-IV_Cureus) |
-| M3 | Fetal death at admission | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission + 6 h | S6 | Stopped before modeling: 73 of 129 deaths already present at the prediction point; return R3 to M4 | [PerinatalMortality_MIMIC-IV](https://github.com/khem777/PerinatalMortality_MIMIC-IV) |
-| M4 | Antenatal fetal death | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission (information from 7 days before or earlier) | G3 | **Fails G3** (negative Cox-Snell R²): feasibility | [PerinatalAntenatal_MIMIC-IV](https://github.com/khem777/PerinatalAntenatal_MIMIC-IV) |
-| M5 | Neonatal mortality | Death at 0 to 27 days | NCHS (CDC), linked births and infant deaths, cohorts 2016–2023 | Birth + 5 min | S3 | In progress: data adapter ready; count audit next | [NeonatalMortality_NCHS](https://github.com/khem777/NeonatalMortality_NCHS) |
-| M6 | Perinatal mortality | Fetal death at 22 weeks or more or neonatal death at 0 to 6 days | NCHS (CDC) | Antenatal (option A) | S6 | In progress: fetal death file pending (decision D1) | [PerinatalMortality_NCHS](https://github.com/khem777/PerinatalMortality_NCHS) |
+| M1 | Maternal death | Death in the delivery hospitalization | MIMIC-IV v3.1 | Admission + 24 h | G3 | **Fails G3** (3 events): feasibility; return R1 to M2 | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/Tesis-Doctoral/MaternalMortality_MIMIC-IV_Cureus) |
+| M2 | Severe maternal morbidity (SMM) | 20 CDC indicators | MIMIC-IV v3.1 | Admission + 24 h | S11 | **Early identifier**; return R2 (escalation): **exploratory signal of prediction** | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/Tesis-Doctoral/MaternalMortality_MIMIC-IV_Cureus) |
+| M3 | Fetal death at admission | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission + 6 h | S6 | Stopped before modeling: 73 of 129 deaths already present at the prediction point; return R3 to M4 | [PerinatalMortality_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalMortality_MIMIC-IV) |
+| M4 | Antenatal fetal death | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission (information from 7 days before or earlier) | G3 | **Fails G3** (negative Cox-Snell R²): feasibility | [PerinatalAntenatal_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalAntenatal_MIMIC-IV) |
+| M5 | Neonatal mortality | Death at 0 to 27 days | NCHS (CDC), linked births and infant deaths, cohorts 2016–2023 | Birth + 5 min | S3 | In progress: data adapter ready; count audit next | [NeonatalMortality_NCHS](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS) |
+| M6 | Perinatal mortality | Fetal death at 22 weeks or more or neonatal death at 0 to 6 days | NCHS (CDC) | Antenatal (option A) | S6 | In progress: fetal death file pending (decision D1) | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
 
-Repository of this framework: [StagedFramework_ClinicalPrediction](https://github.com/khem777/StagedFramework_ClinicalPrediction). Links to repositories not yet published on GitHub will work once they are created with that name.
+Repository of this framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). All repositories are in the [Tesis-Doctoral](https://github.com/Tesis-Doctoral) organization.
 
 ## 2. How they relate
 

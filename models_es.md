@@ -8,14 +8,14 @@ Catálogo de todos los modelos ideados en la tesis, incluidos los que no pasaron
 
 | Id | Modelo | Desenlace | Fuente | Punto de predicción | Hasta dónde llegó | Resultado | Repositorio |
 |---|---|---|---|---|---|---|---|
-| M1 | Muerte materna | Muerte en la hospitalización de parto | MIMIC-IV v3.1 | Ingreso + 24 h | P3 | **No pasa P3** (3 eventos): factibilidad; retorno R1 a M2 | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/khem777/MaternalMortality_MIMIC-IV_Cureus) |
-| M2 | Morbilidad materna grave (SMM) | 20 indicadores de los CDC | MIMIC-IV v3.1 | Ingreso + 24 h | E11 | **Identificador temprano**; retorno R2 (escalamiento): **señal exploratoria de predicción** | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/khem777/MaternalMortality_MIMIC-IV_Cureus) |
-| M3 | Muerte fetal al ingreso | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso + 6 h | E6 | Detenido antes de modelar: 73 de 129 muertes ya presentes en el punto de predicción; retorno R3 a M4 | [PerinatalMortality_MIMIC-IV](https://github.com/khem777/PerinatalMortality_MIMIC-IV) |
-| M4 | Muerte fetal prenatal | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso (información de 7 días antes o más) | P3 | **No pasa P3** (R² de Cox-Snell negativo): factibilidad | [PerinatalAntenatal_MIMIC-IV](https://github.com/khem777/PerinatalAntenatal_MIMIC-IV) |
-| M5 | Mortalidad neonatal | Muerte de 0 a 27 días | NCHS (CDC), nacimientos vinculados con defunciones, cohortes 2016–2023 | Nacimiento + 5 min | E3 | En curso: adaptador de datos listo; sigue la auditoría de conteos | [NeonatalMortality_NCHS](https://github.com/khem777/NeonatalMortality_NCHS) |
-| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | E6 | En curso: falta el archivo de muertes fetales (decisión D1) | [PerinatalMortality_NCHS](https://github.com/khem777/PerinatalMortality_NCHS) |
+| M1 | Muerte materna | Muerte en la hospitalización de parto | MIMIC-IV v3.1 | Ingreso + 24 h | P3 | **No pasa P3** (3 eventos): factibilidad; retorno R1 a M2 | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/Tesis-Doctoral/MaternalMortality_MIMIC-IV_Cureus) |
+| M2 | Morbilidad materna grave (SMM) | 20 indicadores de los CDC | MIMIC-IV v3.1 | Ingreso + 24 h | E11 | **Identificador temprano**; retorno R2 (escalamiento): **señal exploratoria de predicción** | [MaternalMortality_MIMIC-IV_Cureus](https://github.com/Tesis-Doctoral/MaternalMortality_MIMIC-IV_Cureus) |
+| M3 | Muerte fetal al ingreso | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso + 6 h | E6 | Detenido antes de modelar: 73 de 129 muertes ya presentes en el punto de predicción; retorno R3 a M4 | [PerinatalMortality_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalMortality_MIMIC-IV) |
+| M4 | Muerte fetal prenatal | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso (información de 7 días antes o más) | P3 | **No pasa P3** (R² de Cox-Snell negativo): factibilidad | [PerinatalAntenatal_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalAntenatal_MIMIC-IV) |
+| M5 | Mortalidad neonatal | Muerte de 0 a 27 días | NCHS (CDC), nacimientos vinculados con defunciones, cohortes 2016–2023 | Nacimiento + 5 min | E3 | En curso: adaptador de datos listo; sigue la auditoría de conteos | [NeonatalMortality_NCHS](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS) |
+| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | E6 | En curso: falta el archivo de muertes fetales (decisión D1) | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
 
-Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://github.com/khem777/StagedFramework_ClinicalPrediction). Los enlaces de los repositorios que aún no se han publicado en GitHub funcionarán cuando se creen con ese nombre.
+Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). Todos los repositorios están en la organización [Tesis-Doctoral](https://github.com/Tesis-Doctoral).
 
 ## 2. Cómo se relacionan
 
