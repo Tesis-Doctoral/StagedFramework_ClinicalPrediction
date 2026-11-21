@@ -13,7 +13,7 @@ Catálogo de todos los modelos ideados en la tesis, incluidos los que no pasaron
 | M3 | Muerte fetal al ingreso | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso + 6 h | E6 | Detenido antes de modelar: 73 de 129 muertes ya presentes en el punto de predicción; retorno R3 a M4 | [PerinatalMortality_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalMortality_MIMIC-IV) |
 | M4 | Muerte fetal prenatal | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso (información de 7 días antes o más) | P3 | **No pasa P3** (R² de Cox-Snell negativo): factibilidad | [PerinatalAntenatal_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalAntenatal_MIMIC-IV) |
 | M5 | Mortalidad neonatal | Muerte de 0 a 27 días | NCHS (CDC), nacimientos vinculados con defunciones, cohortes 2016–2023 | Nacimiento + 5 min | E3 | En curso: adaptador de datos listo; sigue la auditoría de conteos | [NeonatalMortality_NCHS](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS) |
-| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | E6 | En curso: datos completos (archivos de muertes fetales 2016–2023); sigue el adaptador del componente fetal | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
+| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | P3 | En curso: P1, P2 y P3 pasan (194.174 eventos); sigue el modelado | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
 
 Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). Todos los repositorios están en la organización [Tesis-Doctoral](https://github.com/Tesis-Doctoral).
 
@@ -29,7 +29,7 @@ Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://gith
 | M3 | ✅ | ✅ | ✅ | ✅ | ✅ |  | ✅ |  |  |  |  |  |  |  |  |
 | M4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  |  |
 | M5 | ✅ | ✅ | ✅ |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |
-| M6 | ✅ |  | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |
+| M6 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |  |  |  |
 
 **Leyenda**
 
@@ -149,10 +149,16 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
-| E1 Gobierno y configuración | Sí | Ficha del desenlace versión 1 | — |
-| E2 Universo y población | En curso | Componente neonatal precoz: adaptador listo (unos 7.000 a 8.600 eventos por cohorte). Componente fetal: archivos de muertes fetales 2016–2023 descargados (15.248 a 18.401 muertes de 22 semanas o más por año) | D1 resuelta: adaptador del componente fetal pendiente |
-| E3 Definición del desenlace | Sí | — | Muerte fetal de 22 semanas o más o muerte de 0 a 6 días |
-| E6 Punto de predicción | Sí | — | D2 = opción A, prenatal; excluye el número de controles y la ganancia de peso (dependen de la duración del embarazo) y todo lo del parto. Si queda como *ninguno*, la opción B (al ingreso) queda declarada como retorno R3 |
-| E4, P1, E5, P2, E7, P3, E8, E9, P4, E10, E11 | Pendiente | — | — |
+| E1 Gobierno y configuración | Sí | Archivos públicos de NCHS: nacimientos vinculados con defunciones (cohortes 2016–2023) y muertes fetales (2016–2023) | Datos fuera del repositorio |
+| E2 Universo y población | Sí | 29.963.276 productos de 22 a 47 semanas de madres residentes en EE. UU. (29.829.867 nacidos vivos y 133.409 muertes fetales) | Una fila por producto |
+| E3 Definición del desenlace | Sí | 194.174 eventos (6,5 por 1.000): 133.409 muertes fetales y 60.765 muertes de 0 a 6 días | Muerte fetal de 22 semanas o más o muerte de 0 a 6 días |
+| E4 Auditoría de conteos | Sí | Los desconocidos son de 5 a 18 veces más frecuentes en el reporte de muerte fetal; varias variables dependen de la duración del embarazo | Decisiones D3 a D5 |
+| P1 Definición | Pasa | Conteos del adaptador reproducidos en los 8 años | — |
+| E5 Unidad de análisis | Sí | Sin identificador de la madre | Producto; el grupo es la propia unidad |
+| E6 Punto de predicción | Sí | — | D2 = opción A, prenatal. Si queda como *ninguno*, la opción B (al ingreso) queda declarada como retorno R3 |
+| P2 Fuga | Pasa | Sin variables del parto ni excluidas por D4; sin indicadores de faltante. El número de desconocidos por sí solo da AUROC 0,639 | Sensibilidad obligatoria con solo registros completos |
+| E7 Predictores | Sí | 24 parámetros; faltantes entre 0% y 4,5% | Tabla contrato |
+| P3 Tamaño de muestra | Pasa | R² de Cox-Snell observado 0,0058 (7,6% del máximo); se requerían 37.147 productos y 245 eventos; hay 22.681.046 y 149.057 | Modelo principal: mejor modelo base de una corrida preliminar |
+| E8, E9, P4, E10, E11 | Pendiente | — | — |
 
 *Confidencial: uso interno del proyecto de investigación.*
