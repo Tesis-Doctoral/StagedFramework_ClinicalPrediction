@@ -17,7 +17,23 @@ Catálogo de todos los modelos ideados en la tesis, incluidos los que no pasaron
 
 Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). Todos los repositorios están en la organización [Tesis-Doctoral](https://github.com/Tesis-Doctoral).
 
-## 2. Cómo se relacionan
+## 2. Matriz de etapas y puertas
+
+| Modelo | E1 | E2 | E3 | E4 | **P1** | E5 | E6 | **P2** | E7 | **P3** | E8 | E9 | **P4** | E10 | E11 |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| M1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  | ✅ |
+| M2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ |
+| M2 · R4 |  |  |  |  |  |  |  |  | ✅ |  | ✅ | ✅ | 🟡 |  | ✅ |
+| M2 · R2 |  |  | ✅ | ✅ | ✅ |  |  | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |  | ✅ |
+| M2 · R2 reducido |  |  |  |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ❌ |  | ✅ |
+| M3 | ✅ | ✅ | ✅ | ✅ | ✅ |  | ✅ |  |  |  |  |  |  |  |  |
+| M4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  |  |
+| M5 | ✅ | ✅ | ✅ |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |
+| M6 | ✅ |  | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |
+
+**Leyenda.** En las etapas (E): ✅ la tarea se realizó; en blanco, no se realizó (pendiente, en curso o no se hará porque el modelo se detuvo antes). En las puertas (**P**): ✅ pasa; ❌ no pasa; 🟡 en la puerta P4, el modelo quedó como **identificador temprano** (no llegó a predictor). En la fila "M2 · R2" la ✅ de P4 indica que se cumplieron los criterios de clasificación, aunque la puerta P3 no se pasó; en "M2 · R2 reducido" la ❌ de P4 indica que el modelo principal quedó justo bajo los umbrales de C2 y C4 (señal exploratoria). Las filas de retornos (R4, R2) solo marcan las etapas que se rehicieron; las demás se heredan del modelo principal. El detalle y los indicadores de cada celda están en las secciones siguientes.
+
+## 3. Cómo se relacionan
 
 ```
 Ranura materna      M1 Muerte materna ──R1──► M2 SMM ──R4──► laboratorios ampliados
@@ -27,7 +43,7 @@ Ranura perinatal    M3 Muerte fetal al ingreso + 6 h ──R3──► M4 Muerte
 Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 ```
 
-## 3. M1. Muerte materna (MIMIC-IV)
+## 4. M1. Muerte materna (MIMIC-IV)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
@@ -41,7 +57,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | **P3 Tamaño de muestra** | **No pasa** | Con 32 parámetros, los criterios de Riley exigían al menos 33 muertes aun con el R² supuesto más optimista; había 3 | **Análisis de factibilidad; retorno R1 al siguiente peldaño: SMM (M2)** |
 | E8 a E11, P4 | No se realiza | — | El modelo no se ajusta; se reporta como factibilidad dentro de M2 |
 
-## 4. M2. Morbilidad materna grave a las 24 horas (MIMIC-IV)
+## 5. M2. Morbilidad materna grave a las 24 horas (MIMIC-IV)
 
 ### Modelo principal
 
@@ -75,7 +91,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | R2 Escalamiento de la atención después de las 24 h | Sí | 101 eventos en 19.268 partos (0,52%); AUROC 0,763 (0,709–0,808); 46,5% de los eventos en el 10% superior; C1: 0,761; C2 cumple; C3 no aplica; C4: AUROC temporal 0,714 (0,629–0,795), pendiente 0,98 (0,60–1,31) | Cumple P4, pero **no pasa P3**: R² 0,0077; se requerían 37.098 admisiones; soporta 16 parámetros de 32 |
 | Reducción por tamaño de muestra (13 parámetros) | Sí | P3 **pasa**: R² 0,0069, se requerían 16.962 admisiones y 89 eventos. C1 cumple (0,754 frente a 0,749). XGBoost: C2 0,749 (0,692–0,798), C4 0,699 (0,620–0,778), justo bajo los umbrales; la regresión logística sí los cumple (0,764; 0,712) | **Señal exploratoria de predicción (limítrofe)**; el modelo principal no se cambió después de ver resultados |
 
-## 5. M3. Muerte fetal al ingreso + 6 h (MIMIC-IV)
+## 6. M3. Muerte fetal al ingreso + 6 h (MIMIC-IV)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
@@ -90,7 +106,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | **Decisión** | — | Más de la mitad de los eventos ya estaba presente al predecir | **Retorno R3 anticipado** (otro punto de predicción): M4. El modelo a las 6 h no se ajustó |
 | E11 Reporte | Pendiente | — | Se reporta la auditoría y la razón del retorno |
 
-## 6. M4. Muerte fetal prenatal (MIMIC-IV)
+## 7. M4. Muerte fetal prenatal (MIMIC-IV)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
@@ -108,7 +124,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | E8 a E10, P4 | No se realiza | — | — |
 | E11 Reporte | Pendiente | — | Se reporta como factibilidad |
 
-## 7. M5. Mortalidad neonatal (NCHS)
+## 8. M5. Mortalidad neonatal (NCHS)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
@@ -121,7 +137,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | E6 Punto de predicción | Sí | — | Nacimiento + 5 min; excluido todo lo posterior (UCI neonatal, ventilación, Apgar a los 10 min) |
 | P2, E7, P3, E8, E9, P4, E10, E11 | Pendiente | — | — |
 
-## 8. M6. Mortalidad perinatal (NCHS)
+## 9. M6. Mortalidad perinatal (NCHS)
 
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|

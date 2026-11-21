@@ -17,7 +17,23 @@ Catalogue of every model designed in the thesis, including those that did not pa
 
 Repository of this framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). All repositories are in the [Tesis-Doctoral](https://github.com/Tesis-Doctoral) organization.
 
-## 2. How they relate
+## 2. Matrix of stages and gates
+
+| Model | S1 | S2 | S3 | S4 | **G1** | S5 | S6 | **G2** | S7 | **G3** | S8 | S9 | **G4** | S10 | S11 |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| M1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  | ✅ |
+| M2 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ |
+| M2 · R4 |  |  |  |  |  |  |  |  | ✅ |  | ✅ | ✅ | 🟡 |  | ✅ |
+| M2 · R2 |  |  | ✅ | ✅ | ✅ |  |  | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ |  | ✅ |
+| M2 · R2 reduced |  |  |  |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ❌ |  | ✅ |
+| M3 | ✅ | ✅ | ✅ | ✅ | ✅ |  | ✅ |  |  |  |  |  |  |  |  |
+| M4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  |  |
+| M5 | ✅ | ✅ | ✅ |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |
+| M6 | ✅ |  | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |
+
+**Legend.** In the stages (S): ✅ the task was done; blank, not done (pending, in progress, or will not be done because the model stopped earlier). In the gates (**G**): ✅ passes; ❌ fails; 🟡 at gate G4, the model was classified as an **early identifier** (it did not reach predictor). In row "M2 · R2", the ✅ at G4 means the classification criteria were met although gate G3 was not passed; in "M2 · R2 reduced", the ❌ at G4 means the primary model fell just below the C2 and C4 thresholds (exploratory signal). Return rows (R4, R2) mark only the stages that were redone; the others are inherited from the main model. Details and indicators for each cell are in the following sections.
+
+## 3. How they relate
 
 ```
 Maternal slot       M1 Maternal death ──R1──► M2 SMM ──R4──► extended laboratory tests
@@ -27,7 +43,7 @@ Perinatal slot      M3 Fetal death at admission + 6 h ──R3──► M4 Anten
 Neonatal slot       M5 Neonatal mortality (NCHS)
 ```
 
-## 3. M1. Maternal death (MIMIC-IV)
+## 4. M1. Maternal death (MIMIC-IV)
 
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
@@ -41,7 +57,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | **G3 Sample size** | **Fails** | With 32 parameters, the Riley criteria required at least 33 deaths even with the most optimistic assumed R²; there were 3 | **Feasibility analysis; return R1 to the next rung: SMM (M2)** |
 | S8 to S11, G4 | Not performed | — | No model is fitted; reported as feasibility within M2 |
 
-## 4. M2. Severe maternal morbidity at 24 hours (MIMIC-IV)
+## 5. M2. Severe maternal morbidity at 24 hours (MIMIC-IV)
 
 ### Main model
 
@@ -75,7 +91,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | R2 Escalation of care after 24 h | Yes | 101 events in 19,268 deliveries (0.52%); AUROC 0.763 (0.709–0.808); 46.5% of events in the top 10%; C1: 0.761; C2 met; C3 not applicable; C4: temporal AUROC 0.714 (0.629–0.795), slope 0.98 (0.60–1.31) | Meets G4 but **fails G3**: R² 0.0077; 37,098 admissions required; supports 16 of 32 parameters |
 | Sample-size reduction (13 parameters) | Yes | G3 **passes**: R² 0.0069, 16,962 admissions and 89 events required. C1 met (0.754 vs 0.749). XGBoost: C2 0.749 (0.692–0.798), C4 0.699 (0.620–0.778), just below the thresholds; logistic regression meets them (0.764; 0.712) | **Exploratory signal of prediction (borderline)**; the primary learner was not changed after seeing results |
 
-## 5. M3. Fetal death at admission + 6 h (MIMIC-IV)
+## 6. M3. Fetal death at admission + 6 h (MIMIC-IV)
 
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
@@ -90,7 +106,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | **Decision** | — | More than half of the events were already present at the prediction point | **Anticipated return R3** (another prediction point): M4. The 6-hour model was not fitted |
 | S11 Reporting | Pending | — | The audit and the reason for the return are reported |
 
-## 6. M4. Antenatal fetal death (MIMIC-IV)
+## 7. M4. Antenatal fetal death (MIMIC-IV)
 
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
@@ -108,7 +124,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | S8 to S10, G4 | Not performed | — | — |
 | S11 Reporting | Pending | — | Reported as feasibility |
 
-## 7. M5. Neonatal mortality (NCHS)
+## 8. M5. Neonatal mortality (NCHS)
 
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
@@ -121,7 +137,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | S6 Prediction point | Yes | — | Birth + 5 min; everything later excluded (NICU, ventilation, 10-minute Apgar) |
 | G2, S7, G3, S8, S9, G4, S10, S11 | Pending | — | — |
 
-## 8. M6. Perinatal mortality (NCHS)
+## 9. M6. Perinatal mortality (NCHS)
 
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
