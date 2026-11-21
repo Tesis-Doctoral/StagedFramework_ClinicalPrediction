@@ -31,7 +31,15 @@ Repository of this framework: [StagedFramework_ClinicalPrediction](https://githu
 | M5 | ✅ | ✅ | ✅ |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |
 | M6 | ✅ |  | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |
 
-**Legend.** In the stages (S): ✅ the task was done; blank, not done (pending, in progress, or will not be done because the model stopped earlier). In the gates (**G**): ✅ passes; ❌ fails; 🟡 at gate G4, the model was classified as an **early identifier** (it did not reach predictor). In row "M2 · R2", the ✅ at G4 means the classification criteria were met although gate G3 was not passed; in "M2 · R2 reduced", the ❌ at G4 means the primary model fell just below the C2 and C4 thresholds (exploratory signal). Return rows (R4, R2) mark only the stages that were redone; the others are inherited from the main model. Details and indicators for each cell are in the following sections.
+**Legend**
+
+- **Stages (S):** ✅ the task was done; blank, not done (pending, in progress, or will not be done because the model stopped earlier).
+- **Gates (G):** ✅ passes; ❌ fails.
+- **🟡 at gate G4:** the model was classified as an **early identifier** (it did not reach predictor).
+- **M2 · R2:** the ✅ at G4 means the classification criteria were met although gate G3 was not passed.
+- **M2 · R2 reduced:** the ❌ at G4 means the primary model fell just below the C2 and C4 thresholds (exploratory signal).
+- **Return rows (R4, R2):** mark only the stages that were redone; the others are inherited from the main model.
+- Details and indicators for each cell are in the following sections.
 
 ## 3. How they relate
 

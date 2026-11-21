@@ -31,7 +31,15 @@ Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://gith
 | M5 | ✅ | ✅ | ✅ |  |  | ✅ | ✅ |  |  |  |  |  |  |  |  |
 | M6 | ✅ |  | ✅ |  |  |  | ✅ |  |  |  |  |  |  |  |  |
 
-**Leyenda.** En las etapas (E): ✅ la tarea se realizó; en blanco, no se realizó (pendiente, en curso o no se hará porque el modelo se detuvo antes). En las puertas (**P**): ✅ pasa; ❌ no pasa; 🟡 en la puerta P4, el modelo quedó como **identificador temprano** (no llegó a predictor). En la fila "M2 · R2" la ✅ de P4 indica que se cumplieron los criterios de clasificación, aunque la puerta P3 no se pasó; en "M2 · R2 reducido" la ❌ de P4 indica que el modelo principal quedó justo bajo los umbrales de C2 y C4 (señal exploratoria). Las filas de retornos (R4, R2) solo marcan las etapas que se rehicieron; las demás se heredan del modelo principal. El detalle y los indicadores de cada celda están en las secciones siguientes.
+**Leyenda**
+
+- **Etapas (E):** ✅ la tarea se realizó; en blanco, no se realizó (pendiente, en curso o no se hará porque el modelo se detuvo antes).
+- **Puertas (P):** ✅ pasa; ❌ no pasa.
+- **🟡 en la puerta P4:** el modelo quedó como **identificador temprano** (no llegó a predictor).
+- **M2 · R2:** la ✅ de P4 indica que se cumplieron los criterios de clasificación, aunque la puerta P3 no se pasó.
+- **M2 · R2 reducido:** la ❌ de P4 indica que el modelo principal quedó justo bajo los umbrales de C2 y C4 (señal exploratoria).
+- **Filas de retornos (R4, R2):** solo marcan las etapas que se rehicieron; las demás se heredan del modelo principal.
+- El detalle y los indicadores de cada celda están en las secciones siguientes.
 
 ## 3. Cómo se relacionan
 
