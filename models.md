@@ -13,7 +13,7 @@ Catalogue of every model designed in the thesis, including those that did not pa
 | M3 | Fetal death at admission | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission + 6 h | S6 | Stopped before modeling: 73 of 129 deaths already present at the prediction point; return R3 to M4 | [PerinatalMortality_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalMortality_MIMIC-IV) |
 | M4 | Antenatal fetal death | Fetal death (maternal ICD codes) | MIMIC-IV v3.1 | Admission (information from 7 days before or earlier) | G3 | **Fails G3** (negative Cox-Snell R²): feasibility | [PerinatalAntenatal_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalAntenatal_MIMIC-IV) |
 | M5 | Neonatal mortality | Death at 0 to 27 days | NCHS (CDC), linked births and infant deaths, cohorts 2016–2023 | Birth + 5 min | S3 | In progress: data adapter ready; count audit next | [NeonatalMortality_NCHS](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS) |
-| M6 | Perinatal mortality | Fetal death at 22 weeks or more or neonatal death at 0 to 6 days | NCHS (CDC) | Antenatal (option A) | S6 | In progress: fetal death file pending (decision D1) | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
+| M6 | Perinatal mortality | Fetal death at 22 weeks or more or neonatal death at 0 to 6 days | NCHS (CDC) | Antenatal (option A) | S6 | In progress: data complete (fetal death files 2016–2023); adapter for the fetal component next | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
 
 Repository of this framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). All repositories are in the [Tesis-Doctoral](https://github.com/Tesis-Doctoral) organization.
 
@@ -150,7 +150,7 @@ Neonatal slot       M5 Neonatal mortality (NCHS)
 | Stage or gate | Done | Indicators | Decision |
 |---|---|---|---|
 | S1 Governance and configuration | Yes | Outcome card version 1 | — |
-| S2 Universe and population | In progress | Early neonatal component: adapter ready (about 7,000 to 8,600 events per cohort). Fetal component: fetal death file pending | D1 pending |
+| S2 Universe and population | In progress | Early neonatal component: adapter ready (about 7,000 to 8,600 events per cohort). Fetal component: fetal death files 2016–2023 downloaded (15,248 to 18,401 deaths at 22 weeks or more per year) | D1 resolved: adapter for the fetal component pending |
 | S3 Outcome definition | Yes | — | Fetal death at 22 weeks or more or death at 0 to 6 days |
 | S6 Prediction point | Yes | — | D2 = option A, antenatal; excludes number of visits and weight gain (they depend on the length of pregnancy) and everything from delivery. If classified as *neither*, option B (at admission) is declared as return R3 |
 | S4, G1, S5, G2, S7, G3, S8, S9, G4, S10, S11 | Pending | — | — |

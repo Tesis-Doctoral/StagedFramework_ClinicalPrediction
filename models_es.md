@@ -13,7 +13,7 @@ Catálogo de todos los modelos ideados en la tesis, incluidos los que no pasaron
 | M3 | Muerte fetal al ingreso | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso + 6 h | E6 | Detenido antes de modelar: 73 de 129 muertes ya presentes en el punto de predicción; retorno R3 a M4 | [PerinatalMortality_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalMortality_MIMIC-IV) |
 | M4 | Muerte fetal prenatal | Muerte fetal (códigos CIE de la madre) | MIMIC-IV v3.1 | Ingreso (información de 7 días antes o más) | P3 | **No pasa P3** (R² de Cox-Snell negativo): factibilidad | [PerinatalAntenatal_MIMIC-IV](https://github.com/Tesis-Doctoral/PerinatalAntenatal_MIMIC-IV) |
 | M5 | Mortalidad neonatal | Muerte de 0 a 27 días | NCHS (CDC), nacimientos vinculados con defunciones, cohortes 2016–2023 | Nacimiento + 5 min | E3 | En curso: adaptador de datos listo; sigue la auditoría de conteos | [NeonatalMortality_NCHS](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS) |
-| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | E6 | En curso: falta el archivo de muertes fetales (decisión D1) | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
+| M6 | Mortalidad perinatal | Muerte fetal de 22 semanas o más o muerte neonatal de 0 a 6 días | NCHS (CDC) | Prenatal (opción A) | E6 | En curso: datos completos (archivos de muertes fetales 2016–2023); sigue el adaptador del componente fetal | [PerinatalMortality_NCHS](https://github.com/Tesis-Doctoral/PerinatalMortality_NCHS) |
 
 Repositorio de este framework: [StagedFramework_ClinicalPrediction](https://github.com/Tesis-Doctoral/StagedFramework_ClinicalPrediction). Todos los repositorios están en la organización [Tesis-Doctoral](https://github.com/Tesis-Doctoral).
 
@@ -150,7 +150,7 @@ Ranura neonatal     M5 Mortalidad neonatal (NCHS)
 | Etapa o puerta | Realizada | Indicadores | Decisión |
 |---|---|---|---|
 | E1 Gobierno y configuración | Sí | Ficha del desenlace versión 1 | — |
-| E2 Universo y población | En curso | Componente neonatal precoz: adaptador listo (unos 7.000 a 8.600 eventos por cohorte). Componente fetal: falta el archivo de muertes fetales | D1 pendiente |
+| E2 Universo y población | En curso | Componente neonatal precoz: adaptador listo (unos 7.000 a 8.600 eventos por cohorte). Componente fetal: archivos de muertes fetales 2016–2023 descargados (15.248 a 18.401 muertes de 22 semanas o más por año) | D1 resuelta: adaptador del componente fetal pendiente |
 | E3 Definición del desenlace | Sí | — | Muerte fetal de 22 semanas o más o muerte de 0 a 6 días |
 | E6 Punto de predicción | Sí | — | D2 = opción A, prenatal; excluye el número de controles y la ganancia de peso (dependen de la duración del embarazo) y todo lo del parto. Si queda como *ninguno*, la opción B (al ingreso) queda declarada como retorno R3 |
 | E4, P1, E5, P2, E7, P3, E8, E9, P4, E10, E11 | Pendiente | — | — |
