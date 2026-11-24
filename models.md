@@ -30,7 +30,7 @@ Repository of this framework: [StagedFramework_ClinicalPrediction](https://githu
 | M2 · R2 reduced |  |  |  |  |  |  |  |  | ✅ | ✅ | ✅ | ✅ | ❌ |  | ✅ |
 | M3 | ✅ | ✅ | ✅ | ✅ | ✅ |  | ✅ |  |  |  |  |  |  |  |  |
 | M3 · R3 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |  |  |  |
-| M4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |  |
+| M4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |  |
 | M5 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |
 | M6 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |  |  |
 
@@ -159,7 +159,8 @@ One outcome with two prediction points: admission + 6 h (stopped at S6) and, thr
 | S8 Formal evaluation | Yes | Recalibrated 3 × 5 cross-validation: XGBoost 0.964 (0.963–0.965), AUPRC 0.492, slope 0.98, O/E 0.99; 91.5% of the deaths in the top 10%. LR 0.958. Reference (gestational age + birthweight) 0.907; difference +0.057 (0.056–0.058). Temporal 2022–2023: 0.961 (0.959–0.962), slope 1.01 (0.97–1.03), O/E 1.05 | — |
 | S9 Sensitivity | Yes | 28 weeks or more 0.936 (reference 0.829); 48 h and 28 weeks or more 0.893; early neonatal 0.981; complete records 0.959 (refitted 0.960); cohorts 2020–2021: 0.964, O/E 0.94 | — |
 | G4 Classification | Yes | C1: 55% of the deaths on days 0 and 1; at 48 h AUROC 0.932 (drop 0.032; 0.031–0.033) → met under framework 1.3; AUPRC gain kept 26% (25–27%), which did not meet 1.2 (67% required). C2 met. C3 not applicable. C4 met | **Predictor** (framework 1.3, 2026-11-23, rule adopted after seeing this result; under 1.2, early identifier) |
-| S10, S11 | Pending | — | — |
+| S10 From classification to action | Yes | Temporal test 2022–2023. Recommended cut, risk ≥ 1%: 19 flagged per 1,000 births, sensitivity 0.82, PPV 0.12, 8.5 alerts per death found. Subgroups (race and origin, payment, plurality, cohort): AUROC 0.942–0.972, no discrimination flag; one calibration flag (unknown race, O/E 1.45). Condition at birth (Apgar, weight, gestational age) explains 68% of the risk and prenatal or delivery care 13.5% | Use: prioritizing the highest-risk newborns from birth ([`e10_action_neonatal.md`](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS/blob/main/docs/e10_action_neonatal.md)) |
+| S11 | Pending | — | — |
 
 ## 8. M5. Perinatal mortality (NCHS)
 
@@ -183,7 +184,7 @@ One outcome with two prediction points: admission + 6 h (stopped at S6) and, thr
 | Version 2: version 1 + gestational diabetes, gestational hypertension, eclampsia and smoking during pregnancy (decision of the modeling team, D4 revised) | Yes | 28 parameters; G2 and G3 pass (R² 0.00592). XGBoost 0.742 (0.741–0.743), LR 0.724; stack −0.0006, not adopted; temporal 0.738, slope 0.98, observed/expected 0.90; 41.7% of events in the top 10% (4.2×). Sensitivities: complete records 0.693; 28 weeks or more 0.714; fetal deaths 0.756; early neonatal 0.711. Adjusted odds ratios, all products vs 28 weeks or more: gestational diabetes 0.66 vs 0.96; gestational hypertension 0.85 vs 0.98; eclampsia 1.30 vs 1.29; smoking 1.42 vs 1.42 | **Insufficient signal**: C4 met, C2 not met (0.742 < 0.75). Gain of 0.003 over version 1. The apparent protective effect of gestational diabetes and hypertension comes from the 22–27 week products and disappears at 28 weeks or more |
 | S10, S11 | Pending | — | — |
 | Version 2b: version 2 + maternal height, cigarettes in the first trimester, fertility drugs, assisted reproduction, sex of the product and month of the last menstrual period (completes the second return) | Yes | 35 parameters; XGBoost 0.7455 (0.744–0.747); temporal 0.742, slope 0.98; 42.4% of the events in the top 10%. Sensitivities: + father's age 0.748; fetal deaths only 0.760; early neonatal 0.713; complete records 0.689 | **Insufficient signal** (0.0045 below the threshold) |
-| G2 check of the imputation (notebook 10) | Yes | Same folds: median 0.7455; random draw 0.7234 (difference −0.022; −0.023 to −0.022); median with indicators 0.770; native 0.770. In complete records all four give 0.689–0.691: the difference lies only in records with unknowns. Median-imputed data reveal which record had an unknown with AUROC 0.913 | **Median imputation carried form-type signal**: the clean AUROC of version 2b is 0.723. The rule fixed before running sets random-draw imputation from now on. **Model closed** (decision of 2026-11-24): version 3 is not built, because the antenatal variables shared by both files that remain cannot close a gap of 0.027 |
+| G2 check of the imputation (notebook 10) | Yes | Same folds: median 0.7455; random draw 0.7234 (difference −0.022; −0.023 to −0.022); median with indicators 0.770; native 0.770. In complete records all four give 0.689–0.691: the difference lies only in records with unknowns. Median-imputed data reveal which record had an unknown with AUROC 0.913. Best sensitivity-specificity pair (clean imputation): 0.661 at the balanced point; no threshold gives both ≥ 0.75 | **Median imputation carried form-type signal**: the clean AUROC of version 2b is 0.723. The rule fixed before running sets random-draw imputation from now on. **Model closed** (decision of 2026-11-24): version 3 is not built, because the antenatal variables shared by both files that remain cannot close a gap of 0.027 |
 
 ## 9. M6. Fetal death at 22 weeks or more (NCHS)
 
