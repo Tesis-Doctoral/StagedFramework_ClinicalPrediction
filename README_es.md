@@ -4,7 +4,7 @@
 
 Tesis doctoral, Departamento de Ingeniería de Sistemas, Universidad del Norte (Barranquilla, Colombia). Autor: Emmanuel Gutiérrez Jiménez. Director: José Duván Márquez Díaz.
 
-Versión del framework: 1.0. Versión en inglés: [`README.md`](README.md). Modelos que aplican el framework y su estado: [`models_es.md`](models_es.md).
+Versión del framework: 1.3 (cambio frente a la 1.2, 23/11/2026: el criterio C1 se decide solo con la caída del AUROC; la ganancia del AUPRC conservada se reporta pero no decide, porque depende de la prevalencia. Se adoptó después de ver el resultado del modelo M4 y no cambia la clasificación de ningún otro modelo; [NeonatalMortality_NCHS, decision_G4_C1_2026-11-23](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS/blob/main/docs/decision_G4_C1_2026-11-23_es.md)). Cambio frente a la 1.1, 22/11/2026: los criterios de P4 sobre un subconjunto se evalúan con el modelo ajustado una sola vez en toda su población, y todo conjunto en el que se ajusta un modelo debe pasar P3; ver P4). Cambio anterior frente a la 1.0, 22/11/2026, acordado con el director de la tesis: el criterio C4 juzga la pendiente de calibración con una banda de tolerancia de 0,90–1,10 en lugar de exigir que su IC 95% incluya 1; ver P4). Versión en inglés: [`README.md`](README.md). Modelos que aplican el framework y su estado: [`models_es.md`](models_es.md).
 
 > **Nomenclatura.** En español las etapas son **E1 a E11** y las puertas **P1 a P4**; en inglés son **S1 a S11** (*stages*) y **G1 a G4** (*gates*). Los retornos son **R1 a R4** y los criterios de clasificación **C1 a C4** en ambos idiomas.
 
@@ -16,7 +16,7 @@ El framework lleva cualquier desenlace adverso (materno, perinatal o neonatal) d
 
 - **Predictor:** anticipa eventos que todavía no han ocurrido. Sirve para **prevención**.
 - **Identificador temprano:** reconoce eventos que ya están en curso. Sirve para **vigilancia y priorización de la revisión**, no para prevenir.
-- **Ninguno:** no tiene un uso justificable.
+- **Señal insuficiente:** no alcanza los umbrales para un uso justificable (en la figura y en el artículo de Cureus, *neither*).
 
 ![Framework por etapas: once etapas en cuatro bloques, cuatro puertas, retornos R1 a R4 y la reducción por tamaño de muestra](docs/framework_figure.png)
 
@@ -52,7 +52,7 @@ El framework separa lo que nunca cambia de lo que depende del desenlace o de la 
 | | **P3 Puerta de tamaño de muestra** | ¿Hay eventos suficientes para los parámetros candidatos? |
 | | E8 Modelado, validación y métricas | ¿Qué tan bien funciona y con qué incertidumbre? |
 | Verificar y actuar | E9 Sensibilidad y robustez | ¿Resiste otras decisiones razonables, incluidos los criterios C1 a C4? |
-| | **P4 Puerta de clasificación** | ¿Predictor, identificador temprano o ninguno? |
+| | **P4 Puerta de clasificación** | ¿Predictor, identificador temprano o señal insuficiente? |
 | | E10 De la clasificación a la acción | ¿Qué uso corresponde a la clase y es justo entre subgrupos? |
 | | E11 Reporte | ¿Qué se entrega y cómo? |
 
@@ -151,7 +151,7 @@ El framework separa lo que nunca cambia de lo que depende del desenlace o de la 
 | Aspecto | Contenido |
 |---|---|
 | Verifica | Que haya unidades y eventos suficientes para el número de parámetros candidatos |
-| Indicadores para pasar | Con los criterios de Riley et al. [8, 9] y el **R² de Cox-Snell observado** de una regresión logística con validación cruzada (o un valor supuesto si no se puede ajustar ningún modelo), el tamaño mínimo es el mayor de tres: (1) encogimiento esperado de 0,9 o más; (2) diferencia de 0,05 o menos entre el R² de Nagelkerke aparente y el ajustado; (3) riesgo global estimado con un margen de ±0,05. **Pasa si las unidades y los eventos disponibles igualan o superan ese mínimo.** También se reporta el número máximo de parámetros que soportan los datos |
+| Indicadores para pasar | Con los criterios de Riley et al. [8, 9], en dos pasos: **planeación**, antes de ajustar cualquier modelo candidato, con un R² de Cox-Snell supuesto del 15% de su máximo; y **reevaluación** con el **R² de Cox-Snell observado** de una regresión logística penalizada calculado con sus predicciones fuera de muestra (no es un valor aparente). Se reportan los dos. Los parámetros candidatos son las columnas después de la codificación *one-hot*, sin el intercepto; los criterios son un mínimo para los algoritmos flexibles, que necesitan más eventos por parámetro que la regresión [14]. el tamaño mínimo es el mayor de tres: (1) encogimiento esperado de 0,9 o más; (2) diferencia de 0,05 o menos entre el R² de Nagelkerke aparente y el ajustado; (3) riesgo global estimado con un margen de ±0,05. **Pasa si las unidades y los eventos disponibles igualan o superan ese mínimo.** También se reporta el número máximo de parámetros que soportan los datos |
 | Si no pasa | El desenlace se reporta como análisis de factibilidad y el retorno R1 lleva al siguiente peldaño de la escalera de desenlaces. Si el modelo ya cumplió la puerta P4, se permite una vez la **reducción por tamaño de muestra** (abajo) |
 | Por qué este criterio | La regla tradicional de 10 eventos por variable no tiene base sólida [21]. Los criterios de Riley et al. calculan el tamaño necesario a partir de la prevalencia, el número de parámetros y la variación explicada, y son la referencia actual para desarrollar modelos de predicción [8, 9]. Usar el R² observado en validación cruzada, y no uno supuesto, ancla el cálculo a los datos reales sin mirar el AUROC |
 
@@ -163,12 +163,14 @@ Cuatro criterios, cada uno probado con un análisis de sensibilidad preespecific
 
 | Criterio | Pregunta | Indicador y umbral para cumplirlo | Por qué este criterio |
 |---|---|---|---|
-| **C1** Eventos ya presentes | ¿Cuánto cae el desempeño al retirar los eventos que ya estaban presentes en el punto de predicción (población *landmark*)? | El AUROC cae **0,05 o menos** y se conserva **al menos dos tercios** de la ganancia del AUPRC sobre la prevalencia | Un modelo que predice no debe depender de casos que ya ocurrieron; la población *landmark* es la población realmente en riesgo en el punto de predicción [6]. El umbral de 0,05 y los dos tercios son convenciones de este framework |
+| **C1** Eventos ya presentes | ¿Cuánto cae el desempeño al retirar los eventos que ya estaban presentes en el punto de predicción (población *landmark*)? | El AUROC cae **0,05 o menos**. La proporción conservada de la ganancia del AUPRC sobre la prevalencia se reporta, pero no decide (versión 1.3; hasta la 1.2 se exigían al menos dos tercios) | Un modelo que predice no debe depender de casos que ya ocurrieron; la población *landmark* es la población realmente en riesgo en el punto de predicción [6]. El AUPRC depende de la prevalencia, que cae al retirar los eventos presentes; el AUROC no. El umbral de 0,05 es una convención de este framework |
 | **C2** Desenlace con tiempo | ¿Se mantiene el desempeño para eventos fechados después del punto de predicción? | AUROC de **0,75 o más**, con límite inferior del IC 95% de **0,70 o más** | Solo un evento posterior al punto de predicción se puede prevenir. 0,70 y 0,80 son las convenciones habituales de discriminación aceptable y buena [22]; 0,75 es el punto medio y el límite inferior de 0,70 exige que el resultado no dependa del azar |
 | **C3** Sesgo de detección | Cuando el desenlace depende de un examen, ¿se mantiene el desempeño entre las pacientes a las que se les hizo? | El AUROC cae **0,05 o menos** | Los exámenes se piden porque el clínico ya sospecha algo: el hecho de que exista un examen lleva información del estado de la paciente, y un desenlace definido por un examen solo se detecta en quien fue examinada [7] |
-| **C4** Estabilidad en el tiempo | ¿Discrimina y calibra en un período posterior? | AUROC temporal de **0,70 o más** y calibración corregible **solo con el intercepto** (el IC 95% de la pendiente de calibración incluye 1) | La práctica clínica, la codificación y la mezcla de casos cambian con el tiempo; la validación temporal es el paso intermedio entre la validación interna y la externa [11, 12, 23] |
+| **C4** Estabilidad en el tiempo | ¿Discrimina y calibra en un período posterior? | AUROC temporal de **0,70 o más** y pendiente de calibración temporal entre **0,90 y 1,10** (estimación puntual), de modo que la calibración se corrija solo con el intercepto | La práctica clínica, la codificación y la mezcla de casos cambian con el tiempo; la validación temporal es el paso intermedio entre la validación interna y la externa [11, 12, 23] La pendiente se juzga con una banda de tolerancia y no según si su IC 95% incluye 1: con cientos de miles de unidades el IC es tan estrecho que una desviación despreciable (por ejemplo 0,98) no pasa, mientras que con pocas unidades un IC amplio acepta casi cualquier pendiente. El límite inferior 0,90 es el encogimiento que Riley et al. aceptan como tolerable [8]; 1,10 es su simétrico (versión 1.1) |
 
 Un criterio que no puede aplicarse a un desenlace (por ejemplo C3 cuando el desenlace no depende de un examen) se marca **no aplica** en la ficha, con su razón, antes de ajustar cualquier modelo.
+
+**Modelo ajustado y tamaño de muestra (versión 1.2).** Un criterio que pregunta cómo se comporta un modelo en una parte de su población (C1, población *landmark*; C2, desenlace fechado después del punto de predicción) se evalúa sobre **el modelo ajustado una sola vez en toda su población**, restringiendo sus predicciones fuera de muestra al subconjunto; el modelo no se vuelve a ajustar allí. Todo conjunto en el que se ajusta un modelo, incluido el período de desarrollo de la validación temporal (C4), debe pasar la puerta P3; si no, el criterio se reporta como **no evaluable**. Toda cantidad de decisión se reporta con su intervalo de 95%.
 
 **Regla de clasificación:**
 
@@ -176,7 +178,7 @@ Un criterio que no puede aplicarse a un desenlace (por ejemplo C3 cuando el dese
 |---|---|---|
 | **Predictor** | AUROC de 0,75 o más en la población *landmark* o en un desenlace con tiempo, y cumple C1 a C4 | Estrategia de prevención |
 | **Identificador temprano** | AUROC de 0,75 o más con la etiqueta completa y el 10% de mayor riesgo concentra al menos el doble de los eventos esperados por azar, pero falla C1, C3 o C4 | Vigilancia y priorización de la revisión |
-| **Ninguno** | En otro caso, o con AUROC temporal menor de 0,65 | Sin uso; se reporta |
+| **Señal insuficiente** (*neither*) | En otro caso, o con AUROC temporal menor de 0,65 | Sin uso; se reporta |
 
 El umbral de "el doble de los eventos esperados en el 10% de mayor riesgo" y el de AUROC temporal menor de 0,65 son convenciones de este framework, elegidas para que la clase "identificador temprano" exija una utilidad mínima para priorizar y para descartar modelos que pierden la discriminación con el tiempo.
 
@@ -192,6 +194,8 @@ Cuando un modelo no queda como predictor, el framework permite otro enfoque ante
 | R4 | P4 | E7 | Más predictores o predictores distintos |
 
 **Como máximo dos retornos por desenlace**; cada retorno se reporta y el modelo se clasifica de nuevo después de cada uno. Sin retornos disponibles, el resultado va a E11 como resultado negativo o de factibilidad. El límite existe porque cada intento adicional aumenta la probabilidad de encontrar un resultado favorable por azar [17].
+
+**Modelo derivado.** Como R1 cambia el desenlace (otro peldaño de la escalera), el modelo que resulta es un **modelo derivado**: tiene su propia ficha del desenlace, recorre de nuevo las puertas y dispone de sus propios dos retornos. En el catálogo, el modelo de origen se registra como **exploratorio** ("no pasa P3; deriva en M*n* por R1") y el derivado indica su origen. Los retornos R2 a R4 no crean un modelo nuevo: cambian el mismo desenlace y cuentan dentro de su límite. Un **modelo de verificación** es distinto: se construye para comprobar un hallazgo de otro modelo (por ejemplo, una señal de fuga detectada en P2) y no consume retornos del modelo verificado.
 
 **Escalera de desenlaces** (tres peldaños): (1) el desenlace ideal (por ejemplo, la muerte materna); (2) un sustituto más frecuente en la misma ruta clínica (por ejemplo, la morbilidad materna grave); (3) un desenlace fechado después del punto de predicción (por ejemplo, el escalamiento de la atención).
 
@@ -223,7 +227,7 @@ Para que el framework sea auditable, se separa lo que viene de la literatura de 
 | AUROC 0,70 aceptable y 0,80 buena (base del umbral de 0,75) | Hosmer, Lemeshow y Sturdivant [22] |
 | Calibración y su corrección por el intercepto | Van Calster et al. [11, 12] |
 | Validación temporal para C4 | Justice et al. [23]; Steyerberg [3] |
-| Caída máxima de 0,05 en C1 y C3; dos tercios de la ganancia del AUPRC; doble de eventos en el 10% superior; AUROC temporal menor de 0,65 para "ninguno"; máximo dos retornos; reducción por tamaño de muestra; umbral de 20 eventos por parámetro | Convenciones de este framework, fijadas antes de aplicarlas y registradas en el libro de decisiones |
+| Caída máxima de 0,05 en C1 y C3; dos tercios de la ganancia del AUPRC (solo hasta la versión 1.3); doble de eventos en el 10% superior; banda de 0,90–1,10 para la pendiente en C4 (su límite inferior retoma el encogimiento de 0,9 de Riley [8]); AUROC temporal menor de 0,65 para "ninguno"; máximo dos retornos; reducción por tamaño de muestra; umbral de 20 eventos por parámetro | Convenciones de este framework, fijadas antes de aplicarlas y registradas en el libro de decisiones. Excepción: el cambio de C1 de la versión 1.3 se adoptó después de ver el resultado de M4 y así está registrado |
 
 ## 10. Modelos que aplican el framework
 

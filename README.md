@@ -4,7 +4,7 @@
 
 Doctoral thesis, Department of Systems Engineering, Universidad del Norte (Barranquilla, Colombia). Author: Emmanuel Gutiérrez Jiménez. Supervisor: José Duván Márquez Díaz.
 
-Framework version: 1.0. Spanish version: [`README_es.md`](README_es.md). Models that apply the framework and their status: [`models.md`](models.md).
+Framework version: 1.3 (change from 1.2, 23/11/2026: criterion C1 is decided by the AUROC drop only; the AUPRC gain kept is reported but does not decide, because it depends on prevalence. Adopted after seeing the result of model M4; it does not change the classification of any other model; [NeonatalMortality_NCHS, decision_G4_C1_2026-11-23](https://github.com/Tesis-Doctoral/NeonatalMortality_NCHS/blob/main/docs/decision_G4_C1_2026-11-23.md)). Change from 1.1, 22/11/2026: gate-G4 criteria on a subset are evaluated on the model fitted once on its whole population, and every set on which a model is fitted must pass G3; see G4). Earlier change from 1.0, 22/11/2026, agreed with the thesis director: criterion C4 judges the calibration slope with a tolerance band of 0.90–1.10 instead of requiring its 95% CI to include 1; see G4). Spanish version: [`README_es.md`](README_es.md). Models that apply the framework and their status: [`models.md`](models.md).
 
 > **Nomenclature.** In English the stages are **S1 to S11** and the gates **G1 to G4**; in Spanish they are **E1 to E11** (*etapas*) and **P1 to P4** (*puertas*). Returns are **R1 to R4** and the classification criteria **C1 to C4** in both languages.
 
@@ -16,7 +16,7 @@ The framework takes any adverse outcome (maternal, perinatal or neonatal) from i
 
 - **Predictor:** anticipates events that have not yet happened. Suited to **prevention**.
 - **Early identifier:** recognizes events already under way. Suited to **surveillance and prioritization of review**, not to prevention.
-- **Neither:** no justifiable use.
+- **Insufficient signal:** does not reach the thresholds for a justifiable use (*neither* in the figure and in the Cureus article).
 
 ![Staged framework: eleven stages in four blocks, four gates, returns R1 to R4 and the sample-size reduction](docs/framework_figure.png)
 
@@ -52,7 +52,7 @@ The framework separates what never changes from what depends on the outcome or t
 | | **G3 Sample-size gate** | Are there enough events for the candidate parameters? |
 | | S8 Modeling, validation and metrics | How well does it work, with what uncertainty? |
 | Check and act | S9 Sensitivity and robustness | Does it survive other reasonable choices, including criteria C1 to C4? |
-| | **G4 Classification gate** | Predictor, early identifier or neither? |
+| | **G4 Classification gate** | Predictor, early identifier or insufficient signal? |
 | | S10 From classification to action | What use fits the class, and is it fair across subgroups? |
 | | S11 Reporting | What is delivered, and how? |
 
@@ -151,7 +151,7 @@ The framework separates what never changes from what depends on the outcome or t
 | Aspect | Content |
 |---|---|
 | Checks | That there are enough units and events for the number of candidate parameters |
-| Indicators to pass | With the criteria of Riley et al. [8, 9] and the **observed Cox-Snell R²** of a cross-validated logistic regression (or an assumed value when no model can be fitted), the minimum size is the largest of three: (1) expected shrinkage of 0.9 or more; (2) difference of 0.05 or less between apparent and adjusted Nagelkerke R²; (3) overall risk estimated within ±0.05. **It passes if the available units and events equal or exceed that minimum.** The maximum number of parameters the data support is also reported |
+| Indicators to pass | With the criteria of Riley et al. [8, 9], in two steps: **planning**, before any candidate model is fitted, with an assumed Cox-Snell R² of 15% of its maximum; and **reassessment** with the **observed Cox-Snell R²** of a penalized logistic regression computed from its out-of-fold predictions (not an apparent value). Both are reported. Candidate parameters are the columns after one-hot encoding, without the intercept; the criteria are a minimum for flexible learners, which need more events per parameter than regression [14]. the minimum size is the largest of three: (1) expected shrinkage of 0.9 or more; (2) difference of 0.05 or less between apparent and adjusted Nagelkerke R²; (3) overall risk estimated within ±0.05. **It passes if the available units and events equal or exceed that minimum.** The maximum number of parameters the data support is also reported |
 | If it fails | The outcome is reported as a feasibility analysis and return R1 moves to the next rung of the outcome ladder. If the model has already met gate G4, the **sample-size reduction** (below) is allowed once |
 | Why this criterion | The traditional rule of 10 events per variable has no solid basis [21]. The criteria of Riley et al. compute the required size from prevalence, number of parameters and explained variation, and are the current reference for developing prediction models [8, 9]. Using the R² observed in cross-validation, rather than an assumed one, anchors the calculation to the actual data without looking at the AUROC |
 
@@ -163,12 +163,14 @@ Four criteria, each tested with a prespecified sensitivity analysis. Thresholds 
 
 | Criterion | Question | Indicator and threshold to meet it | Why this criterion |
 |---|---|---|---|
-| **C1** Events already present | How much does performance fall when events already present at the prediction point are removed (landmark population)? | AUROC falls by **0.05 or less** and **at least two thirds** of the AUPRC gain over prevalence is kept | A predicting model should not depend on cases that already happened; the landmark population is the population truly at risk at the prediction point [6]. The 0.05 and two-thirds thresholds are conventions of this framework |
+| **C1** Events already present | How much does performance fall when events already present at the prediction point are removed (landmark population)? | AUROC falls by **0.05 or less**. The share of the AUPRC gain over prevalence kept is reported but does not decide (version 1.3; up to 1.2 at least two thirds were required) | A predicting model should not depend on cases that already happened; the landmark population is the population truly at risk at the prediction point [6]. The AUPRC depends on prevalence, which falls when the events already present are removed; the AUROC does not. The 0.05 threshold is a convention of this framework |
 | **C2** Outcome with time | Does performance hold for events dated after the prediction point? | AUROC of **0.75 or more**, with a lower 95% limit of **0.70 or more** | Only an event after the prediction point can be prevented. 0.70 and 0.80 are the usual conventions for acceptable and good discrimination [22]; 0.75 is the midpoint, and the lower limit of 0.70 requires the result not to depend on chance |
 | **C3** Detection bias | When the outcome depends on a test, does performance hold among patients who were tested? | AUROC falls by **0.05 or less** | Tests are ordered because the clinician already suspects something: the existence of a test carries information about the patient, and an outcome defined from a test is detected only in those tested [7] |
-| **C4** Stability over time | Does the model discriminate and calibrate in a later period? | Temporal AUROC of **0.70 or more** and calibration correctable **by the intercept alone** (the 95% CI of the calibration slope includes 1) | Practice, coding and case mix change over time; temporal validation is the step between internal and external validation [11, 12, 23] |
+| **C4** Stability over time | Does the model discriminate and calibrate in a later period? | Temporal AUROC of **0.70 or more** and temporal calibration slope between **0.90 and 1.10** (point estimate), so that calibration can be corrected by the intercept alone | Practice, coding and case mix change over time; temporal validation is the step between internal and external validation [11, 12, 23]. The slope is judged with a tolerance band, not by whether its 95% CI includes 1: with hundreds of thousands of units the CI is so narrow that a negligible deviation (for example 0.98) fails, while with few units a wide CI accepts almost any slope. The lower limit 0.90 is the shrinkage that Riley et al. accept as tolerable [8]; 1.10 is its symmetric counterpart (version 1.1) |
 
 A criterion that cannot apply to an outcome (for example C3 when the outcome does not depend on a test) is marked **not applicable** in the card, with the reason, before any model is fitted.
+
+**Fitted model and sample size (version 1.2).** A criterion that asks how a model behaves in part of its population (C1, landmark population; C2, outcome dated after the prediction point) is evaluated on **the model fitted once on its whole population**, restricting its out-of-fold predictions to the subset; the model is not refitted there. Every set on which a model is fitted, including the development period of the temporal validation (C4), must pass gate G3; otherwise the criterion is reported as **not assessable**. Every decision quantity is reported with its 95% interval.
 
 **Classification rule:**
 
@@ -176,7 +178,7 @@ A criterion that cannot apply to an outcome (for example C3 when the outcome doe
 |---|---|---|
 | **Predictor** | AUROC of 0.75 or more in the landmark population or on an outcome with time, and meets C1 to C4 | Prevention strategy |
 | **Early identifier** | AUROC of 0.75 or more with the full label and the top 10% of risk holds at least twice the events expected by chance, but fails C1, C3 or C4 | Surveillance and prioritization of review |
-| **Neither** | Otherwise, or a temporal AUROC below 0.65 | No use; reported |
+| **Insufficient signal** (*neither*) | Otherwise, or a temporal AUROC below 0.65 | No use; reported |
 
 The thresholds of "twice the expected events in the top 10%" and "temporal AUROC below 0.65" are conventions of this framework, chosen so that the early-identifier class requires a minimum usefulness for prioritization and to rule out models that lose discrimination over time.
 
@@ -192,6 +194,8 @@ When a model is not a predictor, the framework allows another approach before re
 | R4 | G4 | S7 | More or different predictors |
 
 **At most two returns per outcome**; every return is reported and the model is classified again after each one. With no return left, the result goes to S11 as negative or feasibility. The limit exists because every additional attempt raises the chance of finding a favorable result by chance [17].
+
+**Derived model.** Because R1 changes the outcome (another rung of the ladder), the resulting model is a **derived model**: it has its own outcome card, goes through the gates again and has its own two returns. In the catalogue, the model of origin is recorded as **exploratory** ("fails G3; leads to M*n* through R1") and the derived model states its origin. Returns R2 to R4 do not create a new model: they change the same outcome and count within its limit. A **verification model** is different: it is built to test a finding of another model (for example, a leakage signal detected at G2) and uses none of the returns of the model it verifies.
 
 **Outcome ladder** (three rungs): (1) the ideal outcome (for example, maternal death); (2) a more frequent surrogate on the same clinical path (for example, severe maternal morbidity); (3) an outcome dated after the prediction point (for example, escalation of care).
 
@@ -223,7 +227,7 @@ To keep the framework auditable, what comes from the literature is separated fro
 | AUROC 0.70 acceptable and 0.80 good (basis of the 0.75 threshold) | Hosmer, Lemeshow and Sturdivant [22] |
 | Calibration and its correction by the intercept | Van Calster et al. [11, 12] |
 | Temporal validation for C4 | Justice et al. [23]; Steyerberg [3] |
-| Maximum fall of 0.05 in C1 and C3; two thirds of the AUPRC gain; twice the events in the top 10%; temporal AUROC below 0.65 for "neither"; at most two returns; sample-size reduction; threshold of 20 events per parameter | Conventions of this framework, fixed before being applied and recorded in the decision log |
+| Maximum fall of 0.05 in C1 and C3; two thirds of the AUPRC gain (only up to version 1.3); twice the events in the top 10%; band of 0.90–1.10 for the slope in C4 (its lower limit taken from Riley's shrinkage of 0.9 [8]); temporal AUROC below 0.65 for "neither"; at most two returns; sample-size reduction; threshold of 20 events per parameter | Conventions of this framework, fixed before being applied and recorded in the decision log. Exception: the C1 change of version 1.3 was adopted after seeing the result of M4 and is recorded as such |
 
 ## 10. Models that apply the framework
 
