@@ -142,9 +142,9 @@ The framework separates what never changes from what depends on the outcome or t
 | Aspect | Content |
 |---|---|
 | Checks | That no information after the prediction point enters the model and that every partition is grouped |
-| Indicators to pass | (1) No predictor is dated after the prediction point or comes from the same episode as the outcome (diagnoses, procedures, DRG codes or treatments of the same admission); (2) no grouping unit appears in training and test at once; (3) imputation, scaling, hyperparameter search, stacking and recalibration are fitted on training data only |
-| If it fails | Leaking predictors are removed or the partition is corrected; nothing continues until met |
-| Why this criterion | Leakage is one of the most frequent causes of inflated, irreproducible performance in machine learning [19, 20]; record-wise instead of patient-wise partitions overestimate performance [5] |
+| Indicators to pass | (1) No predictor is dated after the prediction point or comes from the same episode as the outcome (diagnoses, procedures, DRG codes or treatments of the same admission); (2) no grouping unit appears in training and test at once; (3) imputation, scaling, hyperparameter search, stacking and recalibration are fitted on training data only; (4) **form signal of the unknowns:** the AUROC of the number of unknown fields alone is reported; if it separates the events clearly better than chance, the unknowns carry information of the recording process and their handling must keep the model from learning it; (5) **imputation when the unknowns differ between forms or sources:** median imputation, random draw from the observed values (weighted to the population), median with missingness indicators (upper bound of the leakage) and native handling are compared on the same folds, together with how well the imputed data reveal which record had an unknown; if the random draw falls more than 0.005 below the median with its 95% CI below 0, the median carries the form signal and the imputation is the **random draw** (complete records only as the alternative). Conditions (4) and (5) were added after models M5 and M6 (monograph, sections 5.3.2 and 9.3) |
+| If it fails | Leaking predictors are removed, the partition is corrected or the handling of the unknowns is changed (random draw, or complete records only); nothing continues until met |
+| Why this criterion | Leakage is one of the most frequent causes of inflated, irreproducible performance in machine learning [19, 20]; record-wise instead of patient-wise partitions overestimate performance [5]. In M5 no predictor was dated after the prediction point, but median imputation let the type of form (fetal death report or birth certificate) through: the imputed data revealed which record had an unknown with an AUROC of 0.913, and the AUROC fell from 0.7455 to 0.723 with the random draw. M6 was built to verify it (see [`models.md`](models.md)) |
 
 ### G3. Sample-size gate
 
@@ -205,6 +205,7 @@ When a model is not a predictor, the framework allows another approach before re
 - Base learners: penalized logistic regression, random forest, extra trees and XGBoost; stacked ensemble with a logistic meta-learner as a comparison, adopted only if it consistently outperforms the best base learner [16].
 - **Primary learner by events per parameter** (pending the supervisor's validation): with fewer than 20 events per candidate parameter, penalized logistic regression is the primary model; with 20 or more, the best base learner of a preliminary run [14].
 - No resampling in the main analysis; class weights and resampling only as sensitivity [15].
+- Imputation inside training. When the unknowns differ between forms or sources, the imputation is chosen by condition (5) of gate G2 (random draw from the observed values if the median carries the form signal); missingness indicators only as an upper bound of the leakage, never in the model that is classified.
 
 ## 8. Principles that do not change
 
@@ -227,7 +228,7 @@ To keep the framework auditable, what comes from the literature is separated fro
 | AUROC 0.70 acceptable and 0.80 good (basis of the 0.75 threshold) | Hosmer, Lemeshow and Sturdivant [22] |
 | Calibration and its correction by the intercept | Van Calster et al. [11, 12] |
 | Temporal validation for C4 | Justice et al. [23]; Steyerberg [3] |
-| Maximum fall of 0.05 in C1 and C3; twice the events in the top 10%; band of 0.90–1.10 for the slope in C4 (its lower limit taken from Riley's shrinkage of 0.9 [8]); temporal AUROC below 0.65 for "neither"; at most two returns; sample-size reduction; threshold of 20 events per parameter | Conventions of this framework, recorded in the decision log |
+| Maximum fall of 0.05 in C1 and C3; twice the events in the top 10%; band of 0.90–1.10 for the slope in C4 (its lower limit taken from Riley's shrinkage of 0.9 [8]); temporal AUROC below 0.65 for "insufficient signal"; at most two returns; sample-size reduction; threshold of 20 events per parameter; in G2, imputation by random draw when the median carries the form signal (a drop of more than 0.005 with its CI below 0) | Conventions of this framework, recorded in the decision log |
 
 ## 10. Models that apply the framework
 

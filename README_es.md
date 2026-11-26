@@ -142,9 +142,9 @@ El framework separa lo que nunca cambia de lo que depende del desenlace o de la 
 | Aspecto | Contenido |
 |---|---|
 | Verifica | Que ninguna información posterior al punto de predicción entre al modelo y que toda partición esté agrupada |
-| Indicadores para pasar | (1) Ningún predictor tiene fecha posterior al punto de predicción ni proviene del mismo episodio que el desenlace (diagnósticos, procedimientos, códigos DRG o tratamientos de la misma admisión); (2) ninguna unidad de agrupación aparece en entrenamiento y prueba a la vez; (3) imputación, escalado, búsqueda de hiperparámetros, apilamiento y recalibración se ajustan solo con datos de entrenamiento |
-| Si no pasa | Se retiran los predictores con fuga o se corrige la partición; no se continúa hasta cumplirse |
-| Por qué este criterio | La fuga de información es una de las causas más frecuentes de desempeño inflado e irreproducible en aprendizaje automático [19, 20]; las particiones por registro en lugar de por paciente sobrestiman el desempeño [5] |
+| Indicadores para pasar | (1) Ningún predictor tiene fecha posterior al punto de predicción ni proviene del mismo episodio que el desenlace (diagnósticos, procedimientos, códigos DRG o tratamientos de la misma admisión); (2) ninguna unidad de agrupación aparece en entrenamiento y prueba a la vez; (3) imputación, escalado, búsqueda de hiperparámetros, apilamiento y recalibración se ajustan solo con datos de entrenamiento; (4) **señal del formulario en los desconocidos:** se reporta el AUROC del número de campos desconocidos por sí solo; si separa los eventos claramente mejor que el azar, los desconocidos llevan información del proceso de registro y su tratamiento debe impedir que el modelo la aprenda; (5) **imputación cuando los desconocidos difieren entre formularios o fuentes:** se comparan en las mismas particiones la imputación por la mediana, el sorteo aleatorio de los valores observados (ponderado a la población), la mediana con indicadores de faltante (cota superior de la fuga) y el manejo nativo, junto con qué tan bien los datos imputados delatan qué registro tenía un desconocido; si el sorteo queda más de 0,005 por debajo de la mediana con su IC 95% por debajo de 0, la mediana lleva la señal del formulario y la imputación es el **sorteo aleatorio** (solo registros completos como alternativa). Las condiciones (4) y (5) se agregaron después de los modelos M5 y M6 (monografía, secciones 5.3.2 y 9.3) |
+| Si no pasa | Se retiran los predictores con fuga, se corrige la partición o se cambia el tratamiento de los desconocidos (sorteo aleatorio, o solo registros completos); no se continúa hasta cumplirse |
+| Por qué este criterio | La fuga de información es una de las causas más frecuentes de desempeño inflado e irreproducible en aprendizaje automático [19, 20]; las particiones por registro en lugar de por paciente sobrestiman el desempeño [5]. En M5 ningún predictor era posterior al punto de predicción, pero la imputación por la mediana dejaba pasar el tipo de formulario (reporte de muerte fetal o certificado de nacimiento): con los datos imputados se podía saber qué registro tenía un desconocido con un AUROC de 0,913, y el AUROC bajó de 0,7455 a 0,723 con el sorteo aleatorio. M6 se construyó para comprobarlo (ver [`models_es.md`](models_es.md)) |
 
 ### P3. Puerta de tamaño de muestra
 
@@ -205,6 +205,7 @@ Cuando un modelo no queda como predictor, el framework permite otro enfoque ante
 - Modelos base: regresión logística penalizada, bosque aleatorio, árboles extra y XGBoost; ensamble apilado con meta-aprendiz logístico como comparación, adoptado solo si supera de forma consistente al mejor modelo base [16].
 - **Modelo principal según eventos por parámetro** (pendiente de validación del director): con menos de 20 eventos por parámetro candidato, la regresión logística penalizada es el modelo principal; con 20 o más, el mejor modelo base de una corrida preliminar [14].
 - Sin remuestreo en el análisis principal; pesos de clase y remuestreo solo como sensibilidad [15].
+- Imputación dentro del entrenamiento. Cuando los desconocidos difieren entre formularios o fuentes, la imputación se elige con la condición (5) de la puerta P2 (sorteo aleatorio de los valores observados si la mediana lleva la señal del formulario); los indicadores de faltante solo como cota superior de la fuga, nunca en el modelo que se clasifica.
 
 ## 8. Principios que no cambian
 
@@ -227,7 +228,7 @@ Para que el framework sea auditable, se separa lo que viene de la literatura de 
 | AUROC 0,70 aceptable y 0,80 buena (base del umbral de 0,75) | Hosmer, Lemeshow y Sturdivant [22] |
 | Calibración y su corrección por el intercepto | Van Calster et al. [11, 12] |
 | Validación temporal para C4 | Justice et al. [23]; Steyerberg [3] |
-| Caída máxima de 0,05 en C1 y C3; doble de eventos en el 10% superior; banda de 0,90–1,10 para la pendiente en C4 (su límite inferior retoma el encogimiento de 0,9 de Riley [8]); AUROC temporal menor de 0,65 para "ninguno"; máximo dos retornos; reducción por tamaño de muestra; umbral de 20 eventos por parámetro | Convenciones de este framework, registradas en el libro de decisiones |
+| Caída máxima de 0,05 en C1 y C3; doble de eventos en el 10% superior; banda de 0,90–1,10 para la pendiente en C4 (su límite inferior retoma el encogimiento de 0,9 de Riley [8]); AUROC temporal menor de 0,65 para "señal insuficiente"; máximo dos retornos; reducción por tamaño de muestra; umbral de 20 eventos por parámetro; en P2, imputación por sorteo aleatorio cuando la mediana lleva la señal del formulario (caída de más de 0,005 con su IC por debajo de 0) | Convenciones de este framework, registradas en el libro de decisiones |
 
 ## 10. Modelos que aplican el framework
 
