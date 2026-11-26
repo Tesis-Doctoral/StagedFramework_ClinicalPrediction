@@ -200,7 +200,7 @@ Verification model of M5: it tests whether the AUROC of 0.760 for fetal deaths i
 | S8 Modeling | Yes | Preliminary run: RF 0.681, XGBoost 0.680, ET 0.680, LR 0.671; primary XGBoost by the rule. Formal evaluation: 0.680 (0.678–0.682), slope 0.97; 32.8% of the events in the top 10% (3.3×). Temporal 0.673, slope 0.98 | Primary learner: XGBoost |
 | S9 Sensitivity | Yes | + gestational diabetes and hypertension 0.682; 35 variables on complete records 0.697; all records imputed 0.683 (includes the form signal); antepartum 0.672 | — |
 | G4 Classification | Yes | C1 by design; C2 not met (0.680); C3 not applicable; C4 not met (temporal 0.673) | **Insufficient signal**. With the leakage controlled, antenatal fetal death does not exceed 0.70: the 0.760 of M5 came largely from the form type |
-| S10, S11 | Pending | — | Reported as validation of gate G2 |
+| S10, S11 | Done | No individual use (top 10%: sensitivity 0.33, PPV 0.012); reported as the verification of gate G2 of M5 ([`e10_e11_fetal_nchs.md`](https://github.com/Tesis-Doctoral/FetalDeath_NCHS/blob/main/docs/e10_e11_fetal_nchs.md)) | TRIPOD+AI checklist pending |
 
 ## 10. Equivalences with the former numbering
 
