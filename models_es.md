@@ -200,7 +200,7 @@ Modelo de verificación de M5: comprueba si el AUROC de 0,760 de las muertes fet
 | E8 Modelado | Sí | Corrida preliminar: RF 0,681, XGBoost 0,680, ET 0,680, LR 0,671; principal XGBoost por la regla. Evaluación formal: 0,680 (0,678–0,682), pendiente 0,97; 32,8% de los eventos en el 10% superior (3,3×). Temporal 0,673, pendiente 0,98 | Algoritmo principal: XGBoost |
 | E9 Sensibilidad | Sí | + diabetes e hipertensión gestacionales 0,682; 35 variables con registros completos 0,697; todos los registros imputados 0,683 (incluye la señal del formulario); anteparto 0,672 | — |
 | P4 Clasificación | Sí | C1 por diseño; C2 no cumple (0,680); C3 no aplica; C4 no cumple (temporal 0,673) | **Señal insuficiente**. Con la fuga controlada, la muerte fetal prenatal no supera 0,70: el 0,760 de M5 venía en buena parte del tipo de formulario |
-| E10, E11 | Hecho | Sin uso individual (10% superior: sensibilidad 0,33, VPP 0,012); se reporta como la verificación de la puerta P2 de M5 ([`e10_e11_fetal_nchs_es.md`](https://github.com/Tesis-Doctoral/FetalDeath_NCHS/blob/main/docs/e10_e11_fetal_nchs_es.md)) | Lista TRIPOD+AI pendiente |
+| E10, E11 | Hecho | Sin uso individual (10% superior: sensibilidad 0,33, VPP 0,012); se reporta como la verificación de la puerta P2 de M5 ([`e10_e11_fetal_nchs_es.md`](https://github.com/Tesis-Doctoral/FetalDeath_NCHS/blob/main/docs/e10_e11_fetal_nchs_es.md)) | Lista TRIPOD+AI: [`tripod_ai_fetal_nchs_es.md`](https://github.com/Tesis-Doctoral/FetalDeath_NCHS/blob/main/docs/tripod_ai_fetal_nchs_es.md) |
 
 ## 10. Equivalencias con la numeración anterior
 
