@@ -115,7 +115,7 @@ Un solo desenlace con dos puntos de predicción: al ingreso + 6 h (detenido en E
 | E1 Gobierno y configuración | Sí | MIMIC-IV v3.1 | — |
 | E2 Universo y población | Sí | 19.440 admisiones (partos o código de mortinato) | D3 |
 | E3 Definición del desenlace | Sí | Catálogo verificado de códigos; 129 eventos estrictos, 142 con parciales | D5: código estricto como etiqueta principal |
-| E4 Auditoría de conteos | Sí | Grupos A a E y G; T45: **73 de 129 muertes (56,6%) ya presentes en el punto de predicción** | — |
+| E4 Auditoría de conteos | Sí | Grupos A a E y G; auditoría de tiempos (notebook 03, Q-G6): **73 de 129 muertes (56,6%) ya presentes en el punto de predicción** | — |
 | P1 Definición | Pasa | Conteos de la etiqueta reproducidos | — |
 | E5 Unidad de análisis | En curso | Decidida (hospitalización de parto; paciente como grupo); script escrito sin ejecutar | D4 |
 | E6 Punto de predicción | Sí | Con 6 h se conservan los 129 eventos; con 24 h se pierde el 13,2% | D6: ingreso + 6 h |
@@ -136,7 +136,7 @@ Un solo desenlace con dos puntos de predicción: al ingreso + 6 h (detenido en E
 | E6 Punto de predicción | Sí | — | Ingreso; solo información de 7 días antes o más; embarazo actual entre 280 y 7 días antes; márgenes de 1 y 30 días como sensibilidad |
 | P2 Fuga | Pasa | Nada del ingreso actual (ni tipo ni lugar de admisión); particiones agrupadas por paciente | — |
 | E7 Predictores | Sí | 27 parámetros; tabla verificada (19.440 filas por margen, sin duplicados); faltan presión 38,7%, hemoglobina 41,2%, IMC 57,3% | Imputación múltiple; conjunto reducido de 17 fijado antes |
-| **P3 Tamaño de muestra** | **No pasa** | R² de Cox-Snell con validación cruzada: −0,00054 (−0,7% del máximo 0,0767); mínimo para 27 parámetros: 0,0124; para 17: 0,0078 | **Análisis de factibilidad**: la información previa al ingreso no separa los eventos |
+| **P3 Tamaño de muestra** | **No pasa** | R² de Cox-Snell con validación cruzada: −0,00221 (−2,9% del máximo 0,0767); mínimo para 27 parámetros: 0,0124; para 17: 0,0078 | **Análisis de factibilidad**: la información previa al ingreso no separa los eventos |
 | Reducción por tamaño de muestra | No se realiza | — | Solo aplica a un modelo que cumple P4; con R² negativo tampoco pasaría con 17 parámetros |
 | E8 a E10, P4 | No se realiza | — | — |
 | E11 Reporte | Pendiente | — | Se reporta como factibilidad |

@@ -115,7 +115,7 @@ One outcome with two prediction points: admission + 6 h (stopped at S6) and, thr
 | S1 Governance and configuration | Yes | MIMIC-IV v3.1 | — |
 | S2 Universe and population | Yes | 19,440 admissions (deliveries or stillbirth code) | D3 |
 | S3 Outcome definition | Yes | Verified code catalogue; 129 strict events, 142 with partial | D5: strict code as main label |
-| S4 Count audit | Yes | Groups A to E and G; T45: **73 of 129 deaths (56.6%) already present at the prediction point** | — |
+| S4 Count audit | Yes | Groups A to E and G; timing audit (notebook 03, Q-G6): **73 of 129 deaths (56.6%) already present at the prediction point** | — |
 | G1 Definition | Passes | Label counts reproduced | — |
 | S5 Unit of analysis | In progress | Decided (delivery hospitalization; patient as group); script written, not run | D4 |
 | S6 Prediction point | Yes | At 6 h all 129 events are kept; at 24 h 13.2% are lost | D6: admission + 6 h |
@@ -136,7 +136,7 @@ One outcome with two prediction points: admission + 6 h (stopped at S6) and, thr
 | S6 Prediction point | Yes | — | Admission; only information from 7 days before or earlier; current pregnancy between 280 and 7 days before; 1- and 30-day buffers as sensitivity |
 | G2 Leakage | Passes | Nothing from the current admission (not even admission type or location); partitions grouped by patient | — |
 | S7 Predictors | Yes | 27 parameters; verified table (19,440 rows per buffer, no duplicates); missing: blood pressure 38.7%, hemoglobin 41.2%, BMI 57.3% | Multiple imputation; reduced set of 17 fixed beforehand |
-| **G3 Sample size** | **Fails** | Cross-validated Cox-Snell R²: −0.00054 (−0.7% of the maximum 0.0767); minimum for 27 parameters: 0.0124; for 17: 0.0078 | **Feasibility analysis**: pre-admission information does not separate the events |
+| **G3 Sample size** | **Fails** | Cross-validated Cox-Snell R²: −0.00221 (−2.9% of the maximum 0.0767); minimum for 27 parameters: 0.0124; for 17: 0.0078 | **Feasibility analysis**: pre-admission information does not separate the events |
 | Sample-size reduction | Not performed | — | Applies only to a model that meets G4; with a negative R² it would not pass with 17 parameters either |
 | S8 to S10, G4 | Not performed | — | — |
 | S11 Reporting | Pending | — | Reported as feasibility |
